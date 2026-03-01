@@ -543,36 +543,104 @@ class _CourseBottomSheetState extends State<CourseBottomSheet> with TickerProvid
                   Positioned(
                     top: 30,
                     left: 15,
-                    child: LiquidGlassLayer(
-                      settings: const LiquidGlassSettings(
-                        thickness: 30,
-                        blur: 1,
-                        // ✅ Тёмный тинт стекла
-                        glassColor: Colors.black54,
-                        // чёрный с alpha 0x33 (~20%)
-                        // ✅ Усиливаем видимость outline края
-                        // Уменьшаем яркость подсветки — меньше белого на краях
-                        lightIntensity: 0.3,
-                        ambientStrength: 0.2,
-                      ),
-                      // 3. Add your LiquidGlass widgets here
-                      child: LiquidGlass(
-                        shape: LiquidRoundedSuperellipse(borderRadius: 30),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: const SizedBox.square(
-                            dimension: 50,
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Icon(Icons.arrow_back_ios, color: Colors.white),
+                    right: 15,
+                    child: Row(
+                      mainAxisAlignment: .spaceBetween,
+                      children: [
+                        LiquidGlassLayer(
+                          settings: const LiquidGlassSettings(
+                            thickness: 30,
+                            blur: 1,
+                            // ✅ Тёмный тинт стекла
+                            glassColor: Colors.black54,
+                            // чёрный с alpha 0x33 (~20%)
+                            // ✅ Усиливаем видимость outline края
+                            // Уменьшаем яркость подсветки — меньше белого на краях
+                            lightIntensity: 0.3,
+                            ambientStrength: 0.2,
+                          ),
+                          // 3. Add your LiquidGlass widgets here
+                          child: LiquidGlass(
+                            shape: LiquidRoundedSuperellipse(borderRadius: 30),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: const SizedBox.square(
+                                dimension: 50,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 5),
+                                    child: Icon(Icons.arrow_back_ios, color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+
+                        MotionBuilder<Size>(
+                          motion: CupertinoMotion.bouncy(),
+                          value: _isExpanded ? Size(50, 50) : Size(105, 50),
+                          from: Size(50, 50),
+                          converter: SizeMotionConverter(),
+                          builder: (context, value, child) {
+                            return LiquidGlassLayer(
+                              settings: const LiquidGlassSettings(
+                                thickness: 30,
+                                blur: 1,
+                                // ✅ Тёмный тинт стекла
+                                glassColor: Colors.black54,
+                                // чёрный с alpha 0x33 (~20%)
+                                // ✅ Усиливаем видимость outline края
+                                // Уменьшаем яркость подсветки — меньше белого на краях
+                                lightIntensity: 0.3,
+                                ambientStrength: 0.2,
+                              ),
+                              // 3. Add your LiquidGlass widgets here
+                              child: LiquidGlass(
+                                shape: LiquidRoundedSuperellipse(borderRadius: 30),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: SizedBox(
+                                    width: value.width,
+                                    height: value.height,
+                                    child: _isExpanded
+                                        ? SizedBox.square(
+                                            dimension: 50,
+                                            child: Icon(CupertinoIcons.add, size: 30, color: Colors.white),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: Row(
+                                              mainAxisAlignment: .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Icon(
+                                                    CupertinoIcons.chat_bubble,
+                                                    color: Colors.white,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  child: Icon(
+                                                    CupertinoIcons.share_solid,
+                                                    color: Colors.white,
+                                                    size: 30,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -757,37 +825,6 @@ class _TeacherCard extends StatelessWidget {
           ),
           const Icon(CupertinoIcons.chevron_right, color: Color(0xFF8E8E93), size: 16),
         ],
-      ),
-    );
-  }
-}
-
-class Grabber extends StatelessWidget {
-  const Grabber({super.key, required this.onVerticalDragUpdate});
-
-  final ValueChanged<DragUpdateDetails> onVerticalDragUpdate;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return GestureDetector(
-      onVerticalDragUpdate: onVerticalDragUpdate,
-      child: Container(
-        width: double.infinity,
-        color: colorScheme.onSurface,
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            width: 32.0,
-            height: 4.0,
-            decoration: BoxDecoration(
-              color: colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
       ),
     );
   }
