@@ -10,7 +10,7 @@ void main() {
 /// ```
 ///
 /// Instead, we use [WeakReference] so that a [Placeholder] can be garbage collected
-/// as soon as there are no strong references to it — making this suitable for caching.
+/// as soon as there are no strong references to it - making this suitable for caching.
 ///
 /// See [_PlaceholderTile] which holds a strong reference to [Placeholder]
 /// for as long as the tile is visible on screen.
@@ -59,6 +59,13 @@ class _WeakRefScreenState extends State<WeakRefScreen> {
                 );
               },
               child: Icon(CupertinoIcons.add_circled),
+            ),
+          ),
+          SliverFillRemaining(
+            child: Center(
+              child: Text(
+                'Wait a little here or do some interactions with screen until GC automatically collects dead objects',
+              ),
             ),
           ),
         ],
@@ -158,6 +165,6 @@ class _PlaceholderTileState extends State<_PlaceholderTile> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoListTile(title: Text(_strongRef?.name ?? ''));
+    return CupertinoListTile(title: Text(_strongRef?.name ?? 'Garbage collected'));
   }
 }
