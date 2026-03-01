@@ -4,6 +4,16 @@ void main() {
   runApp(WeakRefApp());
 }
 
+/// Using a regular map would keep all [Placeholder] objects alive forever in the heap:
+/// ```dart
+/// final placeHolders = <String, Placeholder>{};
+/// ```
+///
+/// Instead, we use [WeakReference] so that a [Placeholder] can be garbage collected
+/// as soon as there are no strong references to it — making this suitable for caching.
+///
+/// See [_PlaceholderTile] which holds a strong reference to [Placeholder]
+/// for as long as the tile is visible on screen.
 final placeHolders = <String, WeakReference<Placeholder>>{};
 
 class Placeholder {
