@@ -64,7 +64,8 @@ class _WeakRefScreenState extends State<WeakRefScreen> {
           SliverFillRemaining(
             child: Center(
               child: Text(
-                'Wait a little here or do some interactions with screen until GC automatically collects dead objects',
+                'Wait a little here or do some interactions with screen until GC automatically releases dead objects',
+                textAlign: TextAlign.center,
               ),
             ),
           ),
