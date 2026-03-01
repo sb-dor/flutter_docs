@@ -55,7 +55,9 @@ class _WeakRefScreenState extends State<WeakRefScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  CupertinoPageRoute(builder: (context) => WeakRefCreationScreen()),
+                  CupertinoPageRoute(
+                    builder: (context) => WeakRefCreationScreen(),
+                  ),
                 );
               },
               child: Icon(CupertinoIcons.add_circled),
@@ -126,7 +128,10 @@ class _WeakRefCreationScreenState extends State<WeakRefCreationScreen> {
           SliverList.builder(
             itemCount: placeHolders.length,
             itemBuilder: (context, index) {
-              final placeholder = placeHolders.entries.elementAt(index).value.target;
+              final placeholder = placeHolders.entries
+                  .elementAt(index)
+                  .value
+                  .target;
               return _PlaceholderTile(placeholder: placeholder);
             },
           ),
@@ -166,6 +171,8 @@ class _PlaceholderTileState extends State<_PlaceholderTile> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoListTile(title: Text(_strongRef?.name ?? 'Garbage collected'));
+    return CupertinoListTile(
+      title: Text(_strongRef?.name ?? 'Garbage collected'),
+    );
   }
 }
