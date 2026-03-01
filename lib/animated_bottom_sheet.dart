@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
@@ -8,6 +6,8 @@ import 'package:motor/motor.dart';
 void main() {
   runApp(AnimatedBottomSheetApp());
 }
+
+enum LoadingState { idle, spinning, complete }
 
 class AnimatedBottomSheetApp extends StatelessWidget {
   const AnimatedBottomSheetApp({super.key});
@@ -579,18 +579,37 @@ class _CourseBottomSheetState extends State<CourseBottomSheet> with TickerProvid
                           ),
                         ),
 
-                        MotionBuilder<Size>(
+                        MotionBuilder<(Size, Color)>(
                           motion: CupertinoMotion.bouncy(),
-                          value: _isExpanded ? Size(50, 50) : Size(105, 50),
-                          from: Size(50, 50),
-                          converter: SizeMotionConverter(),
+                          value: _isExpanded
+                              ? (Size(50, 50), Colors.white54)
+                              : (Size(105, 50), Colors.black54),
+                          from: (Size(50, 50), Colors.white54),
+                          converter: MotionConverter.custom(
+                            normalize: (value) => [
+                              value.$1.width, // 0 — ширина
+                              value.$1.height, // 1 — высота
+                              value.$2.r, // 2 — red   (0.0 → 1.0)
+                              value.$2.g, // 3 — green (0.0 → 1.0)
+                              value.$2.b, // 4 — blue  (0.0 → 1.0)
+                            ],
+                            denormalize: (values) => (
+                              Size(values[0], values[1]),
+                              Color.from(
+                                alpha: 1.0,
+                                red: values[2].clamp(0.0, 1.0),
+                                green: values[3].clamp(0.0, 1.0),
+                                blue: values[4].clamp(0.0, 1.0),
+                              ),
+                            ),
+                          ),
                           builder: (context, value, child) {
                             return LiquidGlassLayer(
-                              settings: const LiquidGlassSettings(
+                              settings: LiquidGlassSettings(
                                 thickness: 30,
                                 blur: 1,
                                 // ✅ Тёмный тинт стекла
-                                glassColor: Colors.black54,
+                                glassColor: _isExpanded ? value.$2 : Colors.black54,
                                 // чёрный с alpha 0x33 (~20%)
                                 // ✅ Усиливаем видимость outline края
                                 // Уменьшаем яркость подсветки — меньше белого на краях
@@ -605,12 +624,16 @@ class _CourseBottomSheetState extends State<CourseBottomSheet> with TickerProvid
                                     Navigator.pop(context);
                                   },
                                   child: SizedBox(
-                                    width: value.width,
-                                    height: value.height,
+                                    width: value.$1.width,
+                                    height: value.$1.height,
                                     child: _isExpanded
                                         ? SizedBox.square(
                                             dimension: 50,
-                                            child: Icon(CupertinoIcons.add, size: 30, color: Colors.white),
+                                            child: Icon(
+                                              CupertinoIcons.add,
+                                              size: 30,
+                                              color: Colors.black,
+                                            ),
                                           )
                                         : Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 10),
